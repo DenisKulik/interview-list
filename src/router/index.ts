@@ -1,21 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-import { useUserStore } from '@/stores'
-import { storeToRefs } from 'pinia'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const checkAuth = (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const userStore = useUserStore()
-  const { userId } = storeToRefs(userStore)
-
-  if (!userId.value) {
-    next({ name: 'Auth' })
-  } else {
-    next()
-  }
+  let isAuth = false
+  onAuthStateChanged(getAuth(), (user) => {
+    if (user && !isAuth) {
+      isAuth = true
+      next()
+    } else if (!user && !isAuth) {
+      isAuth = true
+      next({ name: 'Auth' })
+    }
+  })
 }
 
 const routes: RouteRecordRaw[] = [

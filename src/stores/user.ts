@@ -4,5 +4,9 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', () => {
   const userId = ref<string>('')
 
-  return { userId }
+  const setUserId = (id: string): void => {
+    userId.value = id
+  }
+
+  return { userId, setUserId }
 })

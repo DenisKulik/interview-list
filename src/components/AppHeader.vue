@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import type { ComputedRef } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import { getAuth, signOut } from 'firebase/auth'
 import { useUserStore } from '@/stores'
 
 interface IMenuItem {
@@ -13,6 +15,7 @@ interface IMenuItem {
 
 const userStore = useUserStore()
 const { userId } = storeToRefs(userStore)
+const router = useRouter()
 const items = ref<IMenuItem[]>([
   {
     label: 'Авторизация',
@@ -39,6 +42,11 @@ const items = ref<IMenuItem[]>([
     show: computed((): boolean => !!userId.value)
   }
 ])
+
+const signOutHandler = async (): Promise<void> => {
+  await signOut(getAuth())
+  router.push({ name: 'Auth' })
+}
 </script>
 
 <template>
@@ -52,7 +60,7 @@ const items = ref<IMenuItem[]>([
       </template>
     </template>
     <template #end>
-      <span v-if="userId" class="flex align-items-center menu-exit">
+      <span v-if="userId" class="flex align-items-center menu-exit" @click="signOutHandler">
         <span class="pi pi-sign-out p-menuitem-icon" />
         <span class="ml-2">Выход</span>
       </span>

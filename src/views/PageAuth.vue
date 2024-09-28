@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 
 const isLogin = ref<boolean>(true)
 const email = ref<string>('')
 const password = ref<string>('')
 const isLoading = ref<boolean>(false)
+const router = useRouter()
+const toast = useToast()
 
 const subtitleText = computed<string>(() => {
   return isLogin.value ? 'Аккаунта еще нет?' : 'Уже есть аккаунт?'
@@ -23,7 +28,45 @@ const toggleAuth = (): void => {
 }
 
 const submitForm = (): void => {
-  console.log('submitForm', email.value, password.value)
+  isLogin.value ? signIn() : signUp()
+}
+
+const signUp = async (): Promise<void> => {
+  isLoading.value = true
+  try {
+    await createUserWithEmailAndPassword(getAuth(), email.value, password.value)
+    router.push({ name: 'Home' })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Ошибка',
+        detail: error.message,
+        life: 3000
+      })
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const signIn = async (): Promise<void> => {
+  isLoading.value = true
+  try {
+    await signInWithEmailAndPassword(getAuth(), email.value, password.value)
+    router.push({ name: 'Home' })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Ошибка',
+        detail: error.message,
+        life: 3000
+      })
+    }
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
