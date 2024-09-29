@@ -31,9 +31,8 @@ const disabledSaveButton = computed<boolean>(() => {
 })
 
 const addNewInterview = async (): Promise<void> => {
-  isLoading.value = true
-
   try {
+    isLoading.value = true
     const payload: IInterview = {
       id: crypto.randomUUID(),
       createdAt: new Date(),

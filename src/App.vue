@@ -35,10 +35,17 @@ onMounted(() => {
 <style scoped>
 .container {
   max-width: 1280px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   padding: 20px;
 }
-
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 .spinner-container {
   width: 100vw;
   height: 100vh;
