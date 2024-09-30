@@ -12,7 +12,7 @@ import {
   doc
 } from 'firebase/firestore'
 import { useConfirm } from 'primevue/useconfirm'
-import { useUserStore } from '@/stores'
+import { useInterviewStore, useUserStore } from '@/stores'
 import type { IInterview } from '@/types'
 
 const db = getFirestore()
@@ -22,11 +22,14 @@ const confirm = useConfirm()
 const userStore = useUserStore()
 const { userId } = storeToRefs(userStore)
 
-const interviews = ref<IInterview[]>([])
+const interviewStore = useInterviewStore()
+const { interviews } = storeToRefs(interviewStore)
+const { setInterviews, deleteInterview } = interviewStore
 const isLoading = ref<boolean>(true)
 
 onMounted(async () => {
-  interviews.value = await getInterviews()
+  const interviewsData = await getInterviews()
+  setInterviews(interviewsData)
   isLoading.value = false
 })
 
@@ -65,8 +68,8 @@ const confirmRemoveInterview = (id: string): void => {
     accept: async () => {
       try {
         isLoading.value = true
-        await deleteInterview(id)
-        interviews.value = await getInterviews()
+        await deleteInterviewAction(id)
+        deleteInterview(id)
       } catch (error: unknown) {
         console.error(error)
       } finally {
@@ -76,7 +79,7 @@ const confirmRemoveInterview = (id: string): void => {
   })
 }
 
-const deleteInterview = async (id: string): Promise<void> => {
+const deleteInterviewAction = async (id: string): Promise<void> => {
   try {
     await deleteDoc(doc(db, `users/${userId.value}/interviews`, id))
   } catch (error: unknown) {

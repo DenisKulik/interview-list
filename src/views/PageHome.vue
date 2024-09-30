@@ -103,6 +103,6 @@ const addNewInterview = async (): Promise<void> => {
 }
 .content-interview {
   max-width: 600px;
-  margin: auto;
+  margin: 0 auto;
 }
 </style>
