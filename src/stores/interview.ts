@@ -1,17 +1,25 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IInterview } from '@/types'
+import type { FetchBaseQueryError, IInterview, SerializedError } from '@/types'
+import { fetchInterviews } from '@/api'
+import { queryNotificationHandler } from '@/utils'
+import type { ToastServiceMethods } from 'primevue/toastservice'
 
 export const useInterviewStore = defineStore('interview', () => {
   const interviews = ref<IInterview[]>([])
 
-  const setInterviews = (data: IInterview[]): void => {
-    interviews.value = data
+  const getInterviews = async (userId: string, toast: ToastServiceMethods): Promise<void> => {
+    try {
+      interviews.value = await fetchInterviews(userId)
+    } catch (error: unknown) {
+      queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
+      interviews.value = []
+    }
   }
 
   const deleteInterview = (id: string): void => {
     interviews.value = interviews.value.filter((item) => item.id !== id)
   }
 
-  return { interviews, setInterviews, deleteInterview }
+  return { interviews, getInterviews, deleteInterview }
 })

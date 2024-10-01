@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { getFirestore, setDoc, doc } from 'firebase/firestore'
+import { useRouter } from 'vue-router'
+import { setDoc, doc } from 'firebase/firestore'
 import { useToast } from 'primevue/usetoast'
 import type { IInterview } from '@/types'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
+import { db } from '@/main'
 
 type InterviewFormDataType = Omit<IInterview, 'id' | 'createdAt'>
 
-const db = getFirestore()
 const toast = useToast()
 
 const userStore = useUserStore()

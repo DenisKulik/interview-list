@@ -2,20 +2,10 @@
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
-import {
-  getFirestore,
-  query,
-  collection,
-  orderBy,
-  getDocs,
-  deleteDoc,
-  doc
-} from 'firebase/firestore'
+import { deleteDoc, doc } from 'firebase/firestore'
 import { useConfirm } from 'primevue/useconfirm'
 import { useInterviewStore, useUserStore } from '@/stores'
-import type { IInterview } from '@/types'
-
-const db = getFirestore()
+import { db } from '@/main'
 
 const toast = useToast()
 const confirm = useConfirm()
@@ -24,37 +14,12 @@ const { userId } = storeToRefs(userStore)
 
 const interviewStore = useInterviewStore()
 const { interviews } = storeToRefs(interviewStore)
-const { setInterviews, deleteInterview } = interviewStore
 const isLoading = ref<boolean>(true)
 
 onMounted(async () => {
-  const interviewsData = await getInterviews()
-  setInterviews(interviewsData)
+  await interviewStore.getInterviews(userId.value, toast)
   isLoading.value = false
 })
-
-const getInterviews = async <T extends IInterview>(): Promise<T[]> => {
-  try {
-    const getData = query(
-      collection(db, `users/${userId.value}/interviews`),
-      orderBy('createdAt', 'desc')
-    )
-    const listDocs = await getDocs(getData)
-
-    return listDocs.docs.map((doc) => doc.data() as T)
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка',
-        detail: error.message,
-        life: 3000
-      })
-    }
-
-    return []
-  }
-}
 
 const confirmRemoveInterview = (id: string): void => {
   confirm.require({
@@ -69,7 +34,7 @@ const confirmRemoveInterview = (id: string): void => {
       try {
         isLoading.value = true
         await deleteInterviewAction(id)
-        deleteInterview(id)
+        interviewStore.deleteInterview(id)
       } catch (error: unknown) {
         console.error(error)
       } finally {

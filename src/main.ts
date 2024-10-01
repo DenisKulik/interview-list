@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import ToastService from 'primevue/toastservice'
@@ -36,7 +37,8 @@ const firebaseConfig = {
   appId: '1:623392175144:web:98c316ff3c540bf367711d'
 }
 
-initializeApp(firebaseConfig)
+const firebaseApp = initializeApp(firebaseConfig)
+export const db = getFirestore(firebaseApp)
 
 const app = createApp(App)
 
