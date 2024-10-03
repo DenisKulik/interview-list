@@ -2,10 +2,8 @@
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
-import { deleteDoc, doc } from 'firebase/firestore'
 import { useConfirm } from 'primevue/useconfirm'
 import { useInterviewStore, useUserStore } from '@/stores'
-import { db } from '@/main'
 
 const toast = useToast()
 const confirm = useConfirm()
@@ -21,7 +19,7 @@ onMounted(async () => {
   isLoading.value = false
 })
 
-const confirmRemoveInterview = (id: string): void => {
+const confirmRemoveInterview = (interviewId: string): void => {
   confirm.require({
     message: 'Вы действительно хотите удалить собеседование?',
     header: 'Подтвердите действие',
@@ -31,34 +29,11 @@ const confirmRemoveInterview = (id: string): void => {
     rejectClass: 'p-button-secondary p-button-text',
     acceptClass: 'p-button-danger',
     accept: async () => {
-      try {
-        isLoading.value = true
-        await deleteInterviewAction(id)
-        interviewStore.deleteInterview(id)
-      } catch (error: unknown) {
-        console.error(error)
-      } finally {
-        isLoading.value = false
-      }
+      isLoading.value = true
+      await interviewStore.deleteInterview(userId.value, interviewId, toast)
+      isLoading.value = false
     }
   })
-}
-
-const deleteInterviewAction = async (id: string): Promise<void> => {
-  try {
-    await deleteDoc(doc(db, `users/${userId.value}/interviews`, id))
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка',
-        detail: error.message,
-        life: 3000
-      })
-    }
-
-    throw error
-  }
 }
 </script>
 
