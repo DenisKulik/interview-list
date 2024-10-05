@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { setDoc, doc } from 'firebase/firestore'
+import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import type { IInterview } from '@/types'
-import { useUserStore } from '@/stores'
-import { storeToRefs } from 'pinia'
-import { db } from '@/main'
+import { useInterviewStore, useUserStore } from '@/stores'
 
 type InterviewFormDataType = Omit<IInterview, 'id' | 'createdAt'>
 
@@ -14,7 +11,7 @@ const toast = useToast()
 
 const userStore = useUserStore()
 const { userId } = storeToRefs(userStore)
-const router = useRouter()
+const interviewStore = useInterviewStore()
 
 const formData = reactive<InterviewFormDataType>({
   company: '',
@@ -31,30 +28,15 @@ const disabledSaveButton = computed<boolean>(() => {
 })
 
 const addNewInterview = async (): Promise<void> => {
-  try {
-    isLoading.value = true
-    const payload: IInterview = {
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-      ...formData
-    }
-
-    if (userId.value) {
-      await setDoc(doc(db, `users/${userId.value}/interviews`, payload.id), payload)
-      router.push({ name: 'List' })
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка',
-        detail: error.message,
-        life: 3000
-      })
-    }
-  } finally {
-    isLoading.value = false
+  const payload: IInterview = {
+    id: crypto.randomUUID(),
+    createdAt: new Date(),
+    ...formData
   }
+
+  isLoading.value = true
+  await interviewStore.createInterview(userId.value, payload, toast)
+  isLoading.value = false
 }
 </script>
 

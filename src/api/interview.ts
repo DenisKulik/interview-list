@@ -1,4 +1,4 @@
-import { getDocs, query, collection, orderBy, deleteDoc, doc } from 'firebase/firestore'
+import { getDocs, query, collection, orderBy, setDoc, deleteDoc, doc } from 'firebase/firestore'
 import type { IInterview } from '@/types'
 import { db } from '@/main'
 
@@ -14,4 +14,11 @@ export const deleteInterviewRequest = async (
   interviewId: string
 ): Promise<void> => {
   await deleteDoc(doc(db, `users/${userId}/interviews`, interviewId))
+}
+
+export const createInterviewRequest = async (
+  userId: string,
+  payload: IInterview
+): Promise<void> => {
+  await setDoc(doc(db, `users/${userId}/interviews`, payload.id), payload)
 }

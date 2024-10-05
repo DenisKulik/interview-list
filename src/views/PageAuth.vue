@@ -3,6 +3,8 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
+import { queryNotificationHandler } from '@/utils'
+import type { FetchBaseQueryError, SerializedError } from '@/types'
 
 const isLogin = ref<boolean>(true)
 const email = ref<string>('')
@@ -37,14 +39,7 @@ const signUp = async (): Promise<void> => {
     await createUserWithEmailAndPassword(getAuth(), email.value, password.value)
     router.push({ name: 'Home' })
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка',
-        detail: error.message,
-        life: 3000
-      })
-    }
+    queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
   } finally {
     isLoading.value = false
   }
@@ -56,14 +51,7 @@ const signIn = async (): Promise<void> => {
     await signInWithEmailAndPassword(getAuth(), email.value, password.value)
     router.push({ name: 'Home' })
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.add({
-        severity: 'error',
-        summary: 'Ошибка',
-        detail: error.message,
-        life: 3000
-      })
-    }
+    queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
   } finally {
     isLoading.value = false
   }
