@@ -3,19 +3,17 @@ import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
-import { useInterviewStore, useUserStore } from '@/stores'
+import { useInterviewStore } from '@/stores'
 
 const toast = useToast()
 const confirm = useConfirm()
-const userStore = useUserStore()
-const { userId } = storeToRefs(userStore)
 
 const interviewStore = useInterviewStore()
 const { interviews } = storeToRefs(interviewStore)
 const isLoading = ref<boolean>(true)
 
 onMounted(async () => {
-  await interviewStore.getInterviews(userId.value, toast)
+  await interviewStore.getInterviews(toast)
   isLoading.value = false
 })
 
@@ -30,7 +28,7 @@ const confirmRemoveInterview = (interviewId: string): void => {
     acceptClass: 'p-button-danger',
     accept: async () => {
       isLoading.value = true
-      await interviewStore.deleteInterview(userId.value, interviewId, toast)
+      await interviewStore.deleteInterview(interviewId, toast)
       isLoading.value = false
     }
   })

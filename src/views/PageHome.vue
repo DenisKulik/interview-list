@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import type { IInterview } from '@/types'
-import { useInterviewStore, useUserStore } from '@/stores'
+import { useInterviewStore } from '@/stores'
 
 type InterviewFormDataType = Omit<IInterview, 'id' | 'createdAt'>
 
 const toast = useToast()
-
-const userStore = useUserStore()
-const { userId } = storeToRefs(userStore)
 const interviewStore = useInterviewStore()
 
 const formData = reactive<InterviewFormDataType>({
@@ -35,7 +31,7 @@ const addNewInterview = async (): Promise<void> => {
   }
 
   isLoading.value = true
-  await interviewStore.createInterview(userId.value, payload, toast)
+  await interviewStore.createInterview(payload, toast)
   isLoading.value = false
 }
 </script>

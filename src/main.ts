@@ -19,23 +19,18 @@ import Column from 'primevue/column'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Message from 'primevue/message'
 import Badge from 'primevue/badge'
+import InputNumber from 'primevue/inputnumber'
+import DatePicker from 'primevue/datepicker'
+import Textarea from 'primevue/textarea'
 
 import App from './App.vue'
 import router from './router'
+import { firebaseConfig } from '@/api'
 
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import 'primeflex/themes/primeone-dark.css'
 import './assets/main.css'
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyBX-yJ-iDQk8ceAqJly20GaKCtbcQfPuTw',
-  authDomain: 'interviews-6ec83.firebaseapp.com',
-  projectId: 'interviews-6ec83',
-  storageBucket: 'interviews-6ec83.appspot.com',
-  messagingSenderId: '623392175144',
-  appId: '1:623392175144:web:98c316ff3c540bf367711d'
-}
 
 const firebaseApp = initializeApp(firebaseConfig)
 export const db = getFirestore(firebaseApp)
@@ -49,6 +44,8 @@ app.use(ConfirmationService)
 app.component('app-menubar', Menubar)
 app.component('app-button', Button)
 app.component('app-input-text', InputText)
+app.component('app-input-number', InputNumber)
+app.component('app-textarea', Textarea)
 app.component('app-toast', Toast)
 app.component('app-progress-spinner', ProgressSpinner)
 app.component('app-card', Card)
@@ -58,6 +55,7 @@ app.component('app-column', Column)
 app.component('app-dialog', ConfirmDialog)
 app.component('app-message', Message)
 app.component('app-badge', Badge)
+app.component('app-calendar', DatePicker)
 app.use(PrimeVue, {
   theme: {
     preset: Aura
