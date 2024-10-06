@@ -1,39 +1,15 @@
-# interview-list
+# Interview List
 
-This template should help get you started developing with Vue 3 in Vite.
+![CI](https://github.com/DenisKulik/interview-list/actions/workflows/github-actions.yml/badge.svg)
 
-## Recommended IDE Setup
+[Demo](https://deniskulik.github.io/interview-list/)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Built With
+This project is built using `TypeScript`, `Vue`, `Pinia`, `Vue Router`, `Firebase`, `PrimeVue`, `Vite` and `Chart.js`.
 
-## Type Support for `.vue` Imports in TS
+## Screenshots
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+![screenshots](./screenshots/interview-list.png)
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+## Description
+Interview List is an app designed for users who are going through job interviews. It allows you to store detailed information about your interviews, track progress, and view statistics on your performance, helping you stay organized and prepared throughout the interview process.
