@@ -35,6 +35,7 @@ const removeStageHandler = (index: number) => {
 </script>
 
 <template>
+  <app-toast position="bottom-right" />
   <app-progress-spinner v-if="isLoading" />
   <div class="content-interview" v-else-if="interview?.id && !isLoading">
     <app-card>

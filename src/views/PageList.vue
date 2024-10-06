@@ -57,9 +57,6 @@ const confirmRemoveInterview = (interviewId: string): void => {
   <div v-if="isLoading" class="spinner-container">
     <app-progress-spinner />
   </div>
-  <app-message v-else-if="!isLoading && !interviews.length" severity="info"
-    >Нет добавленных собеседований
-  </app-message>
   <div v-else>
     <h1>Список собеседований</h1>
 
@@ -90,7 +87,11 @@ const confirmRemoveInterview = (interviewId: string): void => {
       >
     </div>
 
-    <app-datatable :value="interviews">
+    <app-message v-if="!interviews.length" severity="info"
+      >Нет добавленных собеседований
+    </app-message>
+
+    <app-datatable v-else :value="interviews">
       <app-column field="company" header="Компания"></app-column>
       <app-column field="hrName" header="Имя HR"></app-column>
       <app-column field="vacancyLink" header="Вакансия">

@@ -8,7 +8,7 @@ import {
   fetchInterview,
   saveInterviewRequest
 } from '@/api'
-import { queryNotificationHandler } from '@/utils'
+import { queryNotificationHandler, showToast } from '@/utils'
 import type { ToastServiceMethods } from 'primevue/toastservice'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
@@ -52,6 +52,7 @@ export const useInterviewStore = defineStore('interview', () => {
       if (interview.value) {
         await saveInterviewRequest(userId.value, interview.value.id, interview.value)
         interview.value = await fetchInterview(userId.value, interview.value.id)
+        showToast('Информация о собеседовании обновлена', toast, 'info')
       }
     } catch (error: unknown) {
       queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
@@ -80,6 +81,7 @@ export const useInterviewStore = defineStore('interview', () => {
       interviews.value = interviews.value.filter((item) => {
         return item.id !== interviewId
       })
+      showToast('Собеседование успешно удалено', toast, 'success')
     } catch (error: unknown) {
       queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
     }
