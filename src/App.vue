@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useUserStore } from '@/stores'
-import { AppHeader } from '@/components'
+import AppHeader from '@/components/AppHeader.vue'
 
 const isLoading = ref<boolean>(true)
 const userStore = useUserStore()
