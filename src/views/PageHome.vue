@@ -8,6 +8,7 @@ type InterviewFormDataType = Omit<IInterview, 'id' | 'createdAt'>
 
 const toast = useToast()
 const interviewStore = useInterviewStore()
+const { createInterview } = interviewStore
 
 const formData = reactive<InterviewFormDataType>({
   company: '',
@@ -31,7 +32,7 @@ const addNewInterview = async (): Promise<void> => {
   }
 
   isLoading.value = true
-  await interviewStore.createInterview(payload, toast)
+  await createInterview(payload, toast)
   isLoading.value = false
 }
 </script>

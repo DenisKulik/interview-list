@@ -84,6 +84,7 @@ export const useInterviewStore = defineStore('interview', () => {
   ): Promise<void> => {
     try {
       await createInterviewRequest(userId.value, payload)
+      interviews.value.unshift(payload)
       router.push({ name: 'List' })
     } catch (error: unknown) {
       queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)

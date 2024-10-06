@@ -12,24 +12,25 @@ const isLoading = ref<boolean>(true)
 
 const interviewStore = useInterviewStore()
 const { interview } = storeToRefs(interviewStore)
+const { getInterview, saveInterview, addStage, removeStage } = interviewStore
 
 onMounted(async () => {
-  await interviewStore.getInterview(route.params.id as string, toast)
+  await getInterview(route.params.id as string, toast)
   isLoading.value = false
 })
 
 const addStageHandler = () => {
-  interviewStore.addStage()
+  addStage()
 }
 
 const saveInterviewHandler = async () => {
   isLoading.value = true
-  await interviewStore.saveInterview(toast)
+  await saveInterview(toast)
   isLoading.value = false
 }
 
 const removeStageHandler = (index: number) => {
-  interviewStore.removeStage(index)
+  removeStage(index)
 }
 </script>
 

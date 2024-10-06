@@ -10,10 +10,12 @@ const confirm = useConfirm()
 
 const interviewStore = useInterviewStore()
 const { interviews } = storeToRefs(interviewStore)
-const isLoading = ref<boolean>(true)
+const { getInterviews, deleteInterview } = interviewStore
+const isLoading = ref<boolean>(false)
 
 onMounted(async () => {
-  await interviewStore.getInterviews(toast)
+  isLoading.value = true
+  await getInterviews(toast)
   isLoading.value = false
 })
 
@@ -28,7 +30,7 @@ const confirmRemoveInterview = (interviewId: string): void => {
     acceptClass: 'p-button-danger',
     accept: async () => {
       isLoading.value = true
-      await interviewStore.deleteInterview(interviewId, toast)
+      await deleteInterview(interviewId, toast)
       isLoading.value = false
     }
   })
