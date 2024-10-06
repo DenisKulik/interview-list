@@ -8,13 +8,27 @@ import {
   doc,
   getDoc,
   updateDoc,
+  where,
   Timestamp
 } from 'firebase/firestore'
 import { db } from '@/main'
 import type { IInterview, IStage } from '@/types'
 
-export const fetchInterviews = async <T extends IInterview>(userId: string): Promise<T[]> => {
-  const getData = query(collection(db, `users/${userId}/interviews`), orderBy('createdAt', 'desc'))
+export const fetchInterviews = async <T extends IInterview>(
+  userId: string,
+  filter?: string
+): Promise<T[]> => {
+  let getData
+  if (filter) {
+    getData = query(
+      collection(db, `users/${userId}/interviews`),
+      orderBy('createdAt', 'desc'),
+      where('result', '==', filter)
+    )
+  } else {
+    getData = query(collection(db, `users/${userId}/interviews`), orderBy('createdAt', 'desc'))
+  }
+
   const listDocs = await getDocs(getData)
 
   return listDocs.docs.map((doc) => doc.data() as T)

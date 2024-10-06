@@ -9,15 +9,29 @@ const toast = useToast()
 const confirm = useConfirm()
 
 const interviewStore = useInterviewStore()
-const { interviews } = storeToRefs(interviewStore)
+const { interviews, selectedFilter } = storeToRefs(interviewStore)
 const { getInterviews, deleteInterview } = interviewStore
+
 const isLoading = ref<boolean>(false)
 
-onMounted(async () => {
-  isLoading.value = true
-  await getInterviews(toast)
-  isLoading.value = false
+onMounted(() => {
+  getInterviewsHandler()
 })
+
+const selectFilter = (): void => {
+  getInterviewsHandler(true)
+}
+
+const clearFilter = (): void => {
+  selectedFilter.value = ''
+  getInterviewsHandler()
+}
+
+const getInterviewsHandler = async (isFilter: boolean = false): Promise<void> => {
+  isLoading.value = true
+  await getInterviews(toast, isFilter)
+  isLoading.value = false
+}
 
 const confirmRemoveInterview = (interviewId: string): void => {
   confirm.require({
@@ -48,6 +62,34 @@ const confirmRemoveInterview = (interviewId: string): void => {
   </app-message>
   <div v-else>
     <h1>Список собеседований</h1>
+
+    <div class="flex align-items-center mb-5">
+      <div class="flex align-items-center mr-2">
+        <app-radio
+          v-model="selectedFilter"
+          inputId="interviewResult1"
+          name="result"
+          value="Refusal"
+        />
+        <label for="interviewResult1" class="ml-2">Отказ</label>
+      </div>
+      <div class="flex align-items-center mr-2">
+        <app-radio
+          v-model="selectedFilter"
+          inputId="interviewResult2"
+          name="result"
+          value="Offer"
+        />
+        <label for="interviewResult2" class="ml-2">Оффер</label>
+      </div>
+      <app-button class="mr-2" @click="selectFilter" :disabled="!selectedFilter"
+        >Применить</app-button
+      >
+      <app-button severity="danger" :disabled="!selectedFilter" @click="clearFilter"
+        >Сбросить</app-button
+      >
+    </div>
+
     <app-datatable :value="interviews">
       <app-column field="company" header="Компания"></app-column>
       <app-column field="hrName" header="Имя HR"></app-column>

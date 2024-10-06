@@ -23,6 +23,7 @@ import InputNumber from 'primevue/inputnumber'
 import DatePicker from 'primevue/datepicker'
 import Textarea from 'primevue/textarea'
 import Tooltip from 'primevue/tooltip'
+import Chart from 'primevue/chart'
 
 import App from './App.vue'
 import router from './router'
@@ -58,6 +59,7 @@ app.component('app-dialog', ConfirmDialog)
 app.component('app-message', Message)
 app.component('app-badge', Badge)
 app.component('app-calendar', DatePicker)
+app.component('app-chart', Chart)
 app.use(PrimeVue, {
   theme: {
     preset: Aura
