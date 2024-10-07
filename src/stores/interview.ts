@@ -59,19 +59,6 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  const addStage = (): void => {
-    if (interview.value) {
-      if (!interview.value.stages) {
-        interview.value.stages = []
-      }
-      interview.value.stages.push({ name: '', date: null, description: '' })
-    }
-  }
-
-  const removeStage = (index: number): void => {
-    interview.value?.stages?.splice(index, 1)
-  }
-
   const deleteInterview = async (
     interviewId: string,
     toast: ToastServiceMethods
@@ -107,8 +94,6 @@ export const useInterviewStore = defineStore('interview', () => {
     createInterview,
     getInterviews,
     getInterview,
-    addStage,
-    removeStage,
     deleteInterview,
     saveInterview
   }
