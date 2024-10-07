@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const { email, password, isLogin, isLoading } = defineProps({
-  email: String,
-  password: String,
-  isLogin: Boolean,
-  isLoading: Boolean
-})
+const { email, password, isLogin, isLoading } = defineProps<{
+  email: string
+  password: string
+  isLogin: boolean
+  isLoading: boolean
+}>()
 
 const emit = defineEmits(['update:email', 'update:password', 'toggleAuth', 'submitForm'])
 
@@ -35,6 +35,13 @@ const linkAccountText = computed<string>(() => {
 const submitButtonText = computed<string>(() => {
   return isLogin ? 'Войти' : 'Зарегестрироваться'
 })
+
+const toggleAuthHandler = () => {
+  emit('toggleAuth')
+}
+const submitFormHandler = () => {
+  emit('submitForm')
+}
 </script>
 
 <template>
@@ -45,13 +52,13 @@ const submitButtonText = computed<string>(() => {
         <span class="text-600 font-medium line-height-3">{{ subtitleText }}</span>
         <a
           class="font-medium no-underline ml-2 text-blue-500 cursor-pointer"
-          @click="emit('toggleAuth')"
+          @click="toggleAuthHandler"
         >
           {{ linkAccountText }}
         </a>
       </div>
 
-      <form @submit.prevent="emit('submitForm')">
+      <form @submit.prevent="submitFormHandler">
         <label for="email1" class="block text-900 font-medium mb-2">Email</label>
         <app-input-text v-model="proxyEmail" id="email1" type="email" class="w-full mb-3" />
 
