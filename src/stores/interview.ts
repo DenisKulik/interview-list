@@ -16,7 +16,6 @@ import { useUserStore } from '@/stores/user'
 export const useInterviewStore = defineStore('interview', () => {
   const interviews = ref<IInterview[]>([])
   const interview = ref<IInterview | null>(null)
-  const selectedFilter = ref<string>('')
 
   const userStore = useUserStore()
   const { userId } = storeToRefs(userStore)
@@ -25,12 +24,12 @@ export const useInterviewStore = defineStore('interview', () => {
 
   const getInterviews = async (
     toast: ToastServiceMethods,
-    isFilter: boolean = false
+    selectedFilter: string = ''
   ): Promise<void> => {
     try {
       interviews.value = await fetchInterviews(
         userId.value,
-        isFilter ? selectedFilter.value : undefined
+        selectedFilter ? selectedFilter : undefined
       )
     } catch (error: unknown) {
       queryNotificationHandler(error as FetchBaseQueryError | SerializedError, toast)
@@ -93,7 +92,6 @@ export const useInterviewStore = defineStore('interview', () => {
   return {
     interviews,
     interview,
-    selectedFilter,
     createInterview,
     getInterviews,
     getInterview,

@@ -4,22 +4,24 @@ import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
 import { useInterviewStore } from '@/stores'
+import InterviewTableFilter from '@/views/InterviewTableFilter.vue'
 
 const toast = useToast()
 const confirm = useConfirm()
 
 const interviewStore = useInterviewStore()
-const { interviews, selectedFilter } = storeToRefs(interviewStore)
+const { interviews } = storeToRefs(interviewStore)
 const { getInterviews, deleteInterview } = interviewStore
 
 const isLoading = ref<boolean>(false)
+const selectedFilter = ref<string>('')
 
 onMounted(() => {
   getInterviewsHandler()
 })
 
 const selectFilter = (): void => {
-  getInterviewsHandler(true)
+  getInterviewsHandler(selectedFilter.value)
 }
 
 const clearFilter = (): void => {
@@ -27,9 +29,9 @@ const clearFilter = (): void => {
   getInterviewsHandler()
 }
 
-const getInterviewsHandler = async (isFilter: boolean = false): Promise<void> => {
+const getInterviewsHandler = async (selectedFilter: string = ''): Promise<void> => {
   isLoading.value = true
-  await getInterviews(toast, isFilter)
+  await getInterviews(toast, selectedFilter)
   isLoading.value = false
 }
 
@@ -60,32 +62,11 @@ const confirmRemoveInterview = (interviewId: string): void => {
   <div v-else>
     <h1>Список собеседований</h1>
 
-    <div class="flex align-items-center mb-5">
-      <div class="flex align-items-center mr-2">
-        <app-radio
-          v-model="selectedFilter"
-          inputId="interviewResult1"
-          name="result"
-          value="Refusal"
-        />
-        <label for="interviewResult1" class="ml-2">Отказ</label>
-      </div>
-      <div class="flex align-items-center mr-2">
-        <app-radio
-          v-model="selectedFilter"
-          inputId="interviewResult2"
-          name="result"
-          value="Offer"
-        />
-        <label for="interviewResult2" class="ml-2">Оффер</label>
-      </div>
-      <app-button class="mr-2" @click="selectFilter" :disabled="!selectedFilter"
-        >Применить</app-button
-      >
-      <app-button severity="danger" :disabled="!selectedFilter" @click="clearFilter"
-        >Сбросить</app-button
-      >
-    </div>
+    <InterviewTableFilter
+      v-model:selectedFilter="selectedFilter"
+      @selectFilter="selectFilter"
+      @clearFilter="clearFilter"
+    />
 
     <app-message v-if="!interviews.length" severity="info"
       >Нет добавленных собеседований
