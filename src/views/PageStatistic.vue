@@ -21,9 +21,9 @@ onMounted(async () => {
   chartOptions.value = setChartOptions()
 })
 
-const getInterviewsHandler = async (isFilter: boolean = false): Promise<void> => {
+const getInterviewsHandler = async (): Promise<void> => {
   isLoading.value = true
-  await getInterviews(toast, isFilter)
+  await getInterviews(toast)
   isLoading.value = false
 }
 
