@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import { useInterviewStore } from '@/stores'
 import EditInterviewForm from '@/components/EditInterviewForm.vue'
+import type { IInterview } from '@/types'
 
 const route = useRoute()
 const toast = useToast()
@@ -20,9 +21,9 @@ onMounted(async () => {
   isLoading.value = false
 })
 
-const saveInterviewHandler = async () => {
+const saveInterviewHandler = async (interview: IInterview) => {
   isLoading.value = true
-  await saveInterview(toast)
+  await saveInterview(interview, toast)
   isLoading.value = false
 }
 </script>

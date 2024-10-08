@@ -1,2 +1,3 @@
 export * from './query-notification-handler'
-export * from './showToast'
+export * from './show-toast'
+export * from './deep-copy'

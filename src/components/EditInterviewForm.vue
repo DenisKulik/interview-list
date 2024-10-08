@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { IInterview } from '@/types'
 import { reactive } from 'vue'
+import { deepCopy } from '@/utils'
 
 const { interview } = defineProps<{
   interview: IInterview
@@ -10,10 +11,9 @@ const emit = defineEmits<{
   (event: 'saveInterview', interview: IInterview): void
 }>()
 
-const localInterview = reactive<IInterview>({ ...interview })
+const localInterview = reactive<IInterview>(deepCopy(interview))
 
 const addStage = (): void => {
-  // TODO: mutating props
   if (!localInterview.stages) {
     localInterview.stages = []
   }
@@ -32,7 +32,7 @@ const saveInterviewHandler = () => {
 <template>
   <div class="content-interview">
     <app-card>
-      <template #title>Собеседование в компанию {{ interview.company }}</template>
+      <template #title>Собеседование в компанию {{ localInterview.company }}</template>
       <template #content>
         <div class="flex flex-column gap-2">
           <label for="company">Компания</label>
@@ -98,8 +98,8 @@ const saveInterviewHandler = () => {
           class="mb-3"
           @click="addStage"
         />
-        <template v-if="interview.stages">
-          <div v-for="(stage, index) in interview.stages" :key="index" class="interview-stage">
+        <template v-if="localInterview.stages">
+          <div v-for="(stage, index) in localInterview.stages" :key="index" class="interview-stage">
             <div class="flex flex-column gap-2">
               <label :for="`stage-name-${index}`">Название этапа</label>
               <app-input-text class="input mb-3" :id="`stage-name-${index}`" v-model="stage.name" />
@@ -129,7 +129,7 @@ const saveInterviewHandler = () => {
         <div class="flex flex-wrap gap-3 mb-3">
           <div class="flex align-items-center">
             <app-radio
-              v-model="interview.result"
+              v-model="localInterview.result"
               inputId="interviewResult1"
               name="result"
               value="Refusal"
@@ -138,7 +138,7 @@ const saveInterviewHandler = () => {
           </div>
           <div class="flex align-items-center">
             <app-radio
-              v-model="interview.result"
+              v-model="localInterview.result"
               inputId="interviewResult2"
               name="result"
               value="Offer"

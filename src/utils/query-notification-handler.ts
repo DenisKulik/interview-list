@@ -1,4 +1,4 @@
-import { showToast } from '@/utils/showToast'
+import { showToast } from '@/utils/show-toast'
 import type { FetchBaseQueryError, SerializedError } from '@/types'
 import type { ToastServiceMethods } from 'primevue/toastservice'
 

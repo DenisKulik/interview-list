@@ -47,11 +47,14 @@ export const useInterviewStore = defineStore('interview', () => {
     }
   }
 
-  const saveInterview = async (toast: ToastServiceMethods): Promise<void> => {
+  const saveInterview = async (
+    newInterview: IInterview,
+    toast: ToastServiceMethods
+  ): Promise<void> => {
     try {
-      if (interview.value) {
-        await saveInterviewRequest(userId.value, interview.value.id, interview.value)
-        interview.value = await fetchInterview(userId.value, interview.value.id)
+      if (newInterview) {
+        await saveInterviewRequest(userId.value, newInterview.id, newInterview)
+        interview.value = await fetchInterview(userId.value, newInterview.id)
         showToast('Информация о собеседовании обновлена', toast, 'info')
       }
     } catch (error: unknown) {
