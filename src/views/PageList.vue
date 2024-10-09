@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import { useInterviewStore } from '@/stores'
-import InterviewTableFilter from '@/views/InterviewTableFilter.vue'
+import InterviewTableFilter from '@/components/InterviewTableFilter.vue'
 import InterviewTable from '@/components/InterviewTable.vue'
 
 const toast = useToast()
