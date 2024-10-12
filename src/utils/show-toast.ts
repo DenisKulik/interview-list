@@ -6,7 +6,7 @@ export const showToast = (
   message: string,
   toast: ToastServiceMethods,
   severity: toastSeverityType = 'error'
-) => {
+): void => {
   toast.add({
     severity,
     summary: severity === 'error' ? 'Ошибка' : 'Уведомление',
