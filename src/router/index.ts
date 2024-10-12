@@ -42,14 +42,16 @@ router.beforeEach(async (to, from, next) => {
   const requireAuth = to.meta.requireAuth
   const auth = getAuth()
 
-  const checkUser = new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      unsubscribe()
-      resolve(currentUser)
-    })
-  })
+  let currentUser = auth.currentUser
 
-  const currentUser = await checkUser
+  if (!currentUser) {
+    currentUser = await new Promise((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        unsubscribe()
+        resolve(user)
+      })
+    })
+  }
 
   if (requireAuth && !currentUser) {
     next({ name: 'Auth' })
