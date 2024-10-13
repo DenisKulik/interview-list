@@ -1,28 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const { email, password, isLogin, isLoading } = defineProps<{
-  email: string
-  password: string
+const { isLogin, isLoading } = defineProps<{
   isLogin: boolean
   isLoading: boolean
 }>()
 
-const emit = defineEmits(['update:email', 'update:password', 'toggleAuth', 'submitForm'])
+const emit = defineEmits(['toggleAuth', 'submitForm'])
 
-const proxyEmail = computed({
-  get: () => email,
-  set: (value: string) => {
-    emit('update:email', value)
-  }
-})
-
-const proxyPassword = computed({
-  get: () => password,
-  set: (value: string) => {
-    emit('update:password', value)
-  }
-})
+const email = defineModel('email')
+const password = defineModel('password')
 
 const subtitleText = computed<string>(() => {
   return isLogin ? 'Аккаунта еще нет?' : 'Уже есть аккаунт?'
@@ -60,15 +47,10 @@ const submitFormHandler = () => {
 
       <form @submit.prevent="submitFormHandler">
         <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-        <app-input-text v-model="proxyEmail" id="email1" type="email" class="w-full mb-3" />
+        <app-input-text v-model="email" id="email1" type="email" class="w-full mb-3" />
 
         <label for="password1" class="block text-900 font-medium mb-2">Пароль</label>
-        <app-input-text
-          v-model="proxyPassword"
-          id="password1"
-          type="password"
-          class="w-full mb-3"
-        />
+        <app-input-text v-model="password" id="password1" type="password" class="w-full mb-3" />
 
         <app-button
           :label="submitButtonText"
