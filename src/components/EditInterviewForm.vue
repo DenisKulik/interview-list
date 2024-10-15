@@ -102,7 +102,7 @@ const saveInterviewHandler = () => {
           <div v-for="(stage, index) in localInterview.stages" :key="index" class="interview-stage">
             <div class="flex flex-column gap-2">
               <label :for="`stage-name-${index}`">Название этапа</label>
-              <app-input-text class="input mb-3" :id="`stage-name-${index}`" v-model="stage.name" />
+              <app-input-text v-model="stage.name" class="input mb-3" :id="`stage-name-${index}`" />
             </div>
             <div class="flex flex-column gap-2">
               <label :for="`stage-date-${index}`">Дата прохождения этапа</label>

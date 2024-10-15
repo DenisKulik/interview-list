@@ -72,11 +72,11 @@ const confirmRemoveInterview = (interviewId: string): void => {
         <span v-if="!data.stages">Не заполнено</span>
         <div v-else class="interview-stages">
           <app-badge
-            v-for="(stage, i) in data.stages"
+            v-for="({ name }, i) in data.stages"
             :key="i"
             :value="i + 1"
             rounded
-            v-tooltip.top="stage.name"
+            v-tooltip.top="name"
           />
         </div>
       </template>

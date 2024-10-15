@@ -15,9 +15,7 @@ const { getInterviews, deleteInterview } = interviewStore
 const isLoading = ref<boolean>(false)
 const selectedFilter = ref<string>('')
 
-onMounted(() => {
-  getInterviewsHandler()
-})
+onMounted(() => getInterviewsHandler())
 
 const selectFilter = (): void => {
   getInterviewsHandler(selectedFilter.value)
