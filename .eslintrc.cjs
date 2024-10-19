@@ -11,5 +11,10 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    'no-var': 'error',
+    'prefer-const': 'warn',
+    'eqeqeq': 'error',
   }
 }
