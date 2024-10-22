@@ -1,15 +1,30 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useField, useForm } from 'vee-validate'
+import * as yup from 'yup'
 
 const { isLogin, isLoading } = defineProps<{
   isLogin: boolean
   isLoading: boolean
 }>()
 
-const emit = defineEmits(['toggleAuth', 'submitForm'])
+const emit = defineEmits(['toggleAuth', 'submitForm', 'update:email'])
 
-const email = defineModel('email')
-const password = defineModel('password')
+const validationSchema = yup.object({
+  email: yup.string().email('Введите корректный email').required('Email обязателен'),
+  password: yup
+    .string()
+    .min(6, 'Пароль должен содержать минимум 6 символов')
+    .required('Пароль обязателен')
+})
+
+const { handleSubmit, resetForm } = useForm({
+  validationSchema
+})
+
+const { value: email, errorMessage: emailError } = useField('email')
+
+const { value: password, errorMessage: passwordError } = useField('password')
 
 const subtitleText = computed<string>(() => {
   return isLogin ? 'Аккаунта еще нет?' : 'Уже есть аккаунт?'
@@ -26,9 +41,10 @@ const submitButtonText = computed<string>(() => {
 const toggleAuthHandler = () => {
   emit('toggleAuth')
 }
-const submitFormHandler = () => {
-  emit('submitForm')
-}
+const submitFormHandler = handleSubmit(() => {
+  emit('submitForm', { email: email.value, password: password.value })
+  resetForm()
+})
 </script>
 
 <template>
@@ -46,11 +62,30 @@ const submitFormHandler = () => {
       </div>
 
       <form @submit.prevent="submitFormHandler">
-        <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-        <app-input-text v-model="email" id="email1" type="email" class="w-full mb-3" />
+        <div class="relative mb-3">
+          <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+          <app-input-text
+            v-model="email"
+            id="email1"
+            type="email"
+            name="email"
+            class="w-full mb-1"
+          />
+          <span v-if="emailError" class="absolute top-100 left-0 inline-block text-red-300 text-xs">
+            {{ emailError }}
+          </span>
+        </div>
 
-        <label for="password1" class="block text-900 font-medium mb-2">Пароль</label>
-        <app-input-text v-model="password" id="password1" type="password" class="w-full mb-3" />
+        <div class="relative mb-5">
+          <label for="password1" class="block text-900 font-medium mb-2">Пароль</label>
+          <app-input-text v-model="password" id="password1" type="password" class="w-full mb-1" />
+          <span
+            v-if="passwordError"
+            class="absolute top-100 left-0 inline-block text-red-300 text-xs"
+          >
+            {{ passwordError }}
+          </span>
+        </div>
 
         <app-button
           :label="submitButtonText"
@@ -63,5 +98,3 @@ const submitFormHandler = () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

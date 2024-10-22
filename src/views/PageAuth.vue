@@ -9,8 +9,6 @@ import type { FetchBaseQueryError, SerializedError } from '@/types'
 import LoginForm from '@/components/LoginForm.vue'
 
 const isLogin = ref<boolean>(true)
-const email = ref<string>('')
-const password = ref<string>('')
 const isLoading = ref<boolean>(false)
 const router = useRouter()
 const toast = useToast()
@@ -19,8 +17,8 @@ const toggleAuth = (): void => {
   isLogin.value = !isLogin.value
 }
 
-const submitForm = (): void => {
-  isLogin.value ? signIn() : signUp()
+const submitForm = ({ email, password }: { email: string; password: string }): void => {
+  isLogin.value ? signIn({ email, password }) : signUp({ email, password })
 }
 
 const handleAuth = async (authMethod: () => Promise<UserCredential>): Promise<void> => {
@@ -35,20 +33,18 @@ const handleAuth = async (authMethod: () => Promise<UserCredential>): Promise<vo
   }
 }
 
-const signUp = async (): Promise<void> => {
-  await handleAuth(() => createUserWithEmailAndPassword(getAuth(), email.value, password.value))
+const signUp = async ({ email, password }: { email: string; password: string }): Promise<void> => {
+  await handleAuth(() => createUserWithEmailAndPassword(getAuth(), email, password))
 }
 
-const signIn = async (): Promise<void> => {
-  await handleAuth(() => signInWithEmailAndPassword(getAuth(), email.value, password.value))
+const signIn = async ({ email, password }: { email: string; password: string }): Promise<void> => {
+  await handleAuth(() => signInWithEmailAndPassword(getAuth(), email, password))
 }
 </script>
 
 <template>
   <app-toast position="bottom-right" />
   <LoginForm
-    v-model:email="email"
-    v-model:password="password"
     :is-login="isLogin"
     :is-loading="isLoading"
     @toggleAuth="toggleAuth"
