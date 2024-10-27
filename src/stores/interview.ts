@@ -8,7 +8,7 @@ import {
   fetchInterview,
   saveInterviewRequest
 } from '@/api'
-import { queryNotificationHandler, showToast } from '@/utils'
+import { deepCopy, queryNotificationHandler, showToast } from '@/utils'
 import type { ToastServiceMethods } from 'primevue/toastservice'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
@@ -53,7 +53,7 @@ export const useInterviewStore = defineStore('interview', () => {
     try {
       if (newInterview) {
         await saveInterviewRequest(userId.value, newInterview.id, newInterview)
-        interview.value = await fetchInterview(userId.value, newInterview.id)
+        interview.value = deepCopy(newInterview)
         showToast('Информация о собеседовании обновлена', toast, 'info')
       }
     } catch (error: unknown) {
